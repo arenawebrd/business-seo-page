@@ -1,0 +1,15 @@
+---
+import { renderMarkdown } from '../../lib/markdown';
+import SectionImage from './SectionImage.astro';
+import type { PexelsImage } from './SectionImage.astro';
+
+interface Props {
+  markdown: string;
+  sectionImages?: Record<string, PexelsImage>;
+}
+
+const { markdown, sectionImages = {} } = Astro.props;
+const rendered = renderMarkdown(markdown, sectionImages);
+---
+
+<div class="prose-plumb" set:html={rendered} />

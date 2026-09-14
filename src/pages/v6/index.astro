@@ -1,0 +1,266 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogJsonLd from '../../components/seo/BlogJsonLd.astro';
+import Breadcrumbs from '../../components/blog/Breadcrumbs.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import AuthorCard from '../../components/blog/AuthorCard.astro';
+import FAQ from '../../components/blog/FAQ.astro';
+import BackToTop from '../../components/blog/BackToTop.astro';
+import BlogBody from '../../components/blog/BlogBody.astro';
+import SectionImage from '../../components/blog/SectionImage.astro';
+import { voicedPost } from '../../content/blog/voiced';
+import { business } from '../../data/business';
+import pexels from '../../content/pexels.json';
+import { renderMarkdown } from '../../lib/markdown';
+
+const images = (pexels as Record<string, any>)["plumber-for-running-toilet"];
+const hero = images?.hero;
+
+const p = voicedPost;
+
+const [bodyMain, afterFaq = ''] = p.body.split(/\n## Frequently asked\n/);
+const stillStuckMatch = afterFaq.match(/## Still stuck[\s\S]*$/);
+const stillStuckBody = stillStuckMatch
+  ? stillStuckMatch[0].replace(/^## Still stuck[^\n]*\n+/, '')
+  : '';
+
+const toc = [
+  { id: 'why-is-my-toilet-running-the-5-common-causes', label: 'Why is my toilet running? 5 causes' },
+  { id: 'signs-you-have-a-running-toilet-beyond-the-obvious-noise', label: 'Signs (beyond the noise)' },
+  { id: 'tools-youll-need', label: "Tools you'll need" },
+  { id: 'how-to-stop-a-running-toilet-step-by-step', label: 'How to stop it — step by step' },
+  { id: 'toilet-flapper-replacement-the-20-fix', label: 'Flapper replacement ($20 fix)' },
+  { id: 'fill-valve-replacement-if-the-flapper-isnt-it', label: 'Fill valve replacement' },
+  { id: 'when-to-call-a-plumber', label: 'When to call a plumber' },
+  { id: 'how-much-to-fix-a-running-toilet-honest-numbers', label: 'How much it costs' },
+  { id: 'how-much-water-does-a-running-toilet-waste', label: 'How much water it wastes' },
+  { id: 'two-things-most-other-guides-miss', label: 'Two things other guides miss' },
+  { id: 'frequently-asked', label: 'Frequently asked' },
+  { id: 'still-stuck', label: 'Still stuck? Call us' },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/v6/' },
+  { name: p.title, url: '/v6/' },
+];
+
+const techSeoChecks = [
+  { label: 'Sitemap.xml', status: true, note: 'Auto-generated via @astrojs/sitemap' },
+  { label: 'Robots.txt', status: true, note: 'Allows all crawlers, points to sitemap' },
+  { label: 'Canonical URLs', status: true, note: 'Set on every page via metadata' },
+  { label: 'Open Graph tags', status: true, note: 'OG + Twitter Card meta on all pages' },
+  { label: 'JSON-LD schema', status: true, note: 'Article, FAQPage, BreadcrumbList, Person' },
+  { label: 'Semantic HTML', status: true, note: 'header, nav, main, article, footer' },
+  { label: 'Mobile viewport', status: true, note: 'Set in base layout' },
+  { label: 'Static rendering', status: true, note: '100% SSG, zero JS by default' },
+  { label: 'Image optimization', status: true, note: 'width/height attrs for CLS prevention' },
+  { label: 'Internal links', status: true, note: '3-5 per post, contextual anchor text' },
+];
+---
+
+<BaseLayout
+  title="Plumber for a Running Toilet: Fix or Call? | Plumbing Co"
+  description={p.description}
+  canonical="/v6/"
+  ogType="article"
+  publishedTime={p.publishedAt}
+  keywords={p.keywordCluster}
+>
+  <BlogJsonLd
+    title={p.title}
+    description={p.description}
+    slug="v6"
+    publishedAt={p.publishedAt}
+    author={{
+      name: p.author.name,
+      licence: p.author.licence,
+      years: p.author.years,
+    }}
+    faqs={p.faqs}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <article class="container-x pt-10 pb-20 md:pt-14">
+    <div class="mx-auto max-w-3xl">
+      {/* Technical SEO Scorecard */}
+      <div class="mb-8 rounded-2xl border border-ink/10 bg-white p-6 shadow-card">
+        <div class="text-xs font-semibold uppercase tracking-[0.18em] text-ink/50 mb-4">
+          Technical SEO Scorecard
+        </div>
+        <div class="grid gap-2 md:grid-cols-2">
+          {techSeoChecks.map((check) => (
+            <div class="flex items-center gap-2 text-sm">
+              <svg class={`h-4 w-4 ${check.status ? 'text-green-500' : 'text-red-500'}`} viewBox="0 0 20 20" fill="currentColor">
+                {check.status ? (
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                ) : (
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                )}
+              </svg>
+              <span class="font-medium text-ink">{check.label}</span>
+              <span class="text-xs text-ink/50">— {check.note}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Blog', href: '/v6/' },
+          { label: 'Running toilet' },
+        ]}
+      />
+
+      <h1 class="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tightest text-ink md:text-5xl">
+        {p.title}
+      </h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink/60">
+        <div class="flex items-center gap-2">
+          <div class="grid h-9 w-9 place-items-center rounded-full bg-brand text-xs font-bold text-white">
+            MD
+          </div>
+          <div>
+            <div class="font-medium text-ink">{p.author.name}</div>
+            <div class="text-xs">Licensed plumber · {business.address.suburb}</div>
+          </div>
+        </div>
+        <span aria-hidden="true">·</span>
+        <span>
+          <span class="text-ink/70">Published </span>
+          <time datetime={p.publishedAt}>
+            {new Date(p.publishedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </time>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span>
+          <span class="text-ink/70">Last updated </span>
+          <time datetime={p.publishedAt}>
+            {new Date(p.publishedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </time>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span>{p.readingMinutes} min read</span>
+      </div>
+
+      {hero && (
+        <div class="mt-8">
+          <SectionImage image={hero} priority />
+        </div>
+      )}
+
+      <div class="mt-8 rounded-2xl border border-brand/20 bg-brand-soft/60 p-6">
+        <div class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-ink">
+          TL;DR
+        </div>
+        <p class="mt-2 text-[1.02rem] leading-relaxed text-ink/85">{p.tldr}</p>
+      </div>
+
+      {/* Inline TOC */}
+      <div class="mt-8">
+        <TableOfContents items={toc} />
+      </div>
+
+      <div class="mt-10">
+        <BlogBody markdown={bodyMain} sectionImages={images} />
+      </div>
+
+      {/* Internal links */}
+      <div class="mt-12 rounded-3xl border border-ink/10 bg-white p-7 shadow-card">
+        <div class="text-xs font-semibold uppercase tracking-[0.18em] text-ink/60">
+          While you're here
+        </div>
+        <h2 class="mt-2 font-display text-xl font-bold tracking-tight md:text-2xl">
+          Other things on this site that'll save you money.
+        </h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v4/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                Toilet repair — flat prices, same-day
+              </a>{" "}
+              — if you've read this far and decided you're calling us anyway, the service page has the pricing table and what's included.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v2/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                Low water pressure: what a plumber actually checks
+              </a>{" "}
+              — different problem, same philosophy. Unscrew the aerator before you call anyone, is my unsolicited advice.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v5/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                The on-page-SEO version of this post
+              </a>{" "}
+              — same post, without the technical-SEO scorecard at the top. For the completionists.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      {/* External links */}
+      <div class="mt-8 text-xs text-ink/70">
+        Further reading:{" "}
+        <a
+          href="https://www.yourhome.gov.au/water/reducing-water-demand"
+          target="_blank"
+          rel="noopener nofollow"
+          class="text-ink/85 underline-offset-4 hover:text-ink hover:underline"
+        >
+          Australian Government — Reducing water demand
+        </a>
+        {" · "}
+        <a
+          href="https://www.bunnings.com.au/our-range/bathroom-plumbing/toilets-accessories"
+          target="_blank"
+          rel="noopener nofollow"
+          class="text-ink/85 underline-offset-4 hover:text-ink hover:underline"
+        >
+          Bunnings — toilet parts &amp; flapper kits
+        </a>
+      </div>
+
+      {/* FAQ */}
+      <FAQ faqs={p.faqs} />
+
+      {/* Still stuck CTA */}
+      <section id="still-stuck" class="mt-14">
+        <h2 class="font-display text-2xl font-bold tracking-tightest md:text-3xl">
+          Still stuck? Give us a call.
+        </h2>
+        {stillStuckBody && (
+          <div class="prose-plumb mt-4" set:html={renderMarkdown(stillStuckBody)} />
+        )}
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href={`tel:${business.phoneE164}`} class="btn-brand">
+            Call {business.phone}
+          </a>
+          <a href="/v4/" class="btn-primary">
+            See our toilet repair page
+          </a>
+        </div>
+      </section>
+
+      {/* Author card */}
+      <div class="mt-12">
+        <AuthorCard
+          name={p.author.name}
+          role={p.author.role}
+          licence={p.author.licence}
+          years={p.author.years}
+          bio={p.author.bio}
+        />
+      </div>
+
+      <BackToTop />
+    </div>
+  </article>
+</BaseLayout>

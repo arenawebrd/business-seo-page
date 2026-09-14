@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogJsonLd from '../../components/seo/BlogJsonLd.astro';
+import Breadcrumbs from '../../components/blog/Breadcrumbs.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import AuthorCard from '../../components/blog/AuthorCard.astro';
+import FAQ from '../../components/blog/FAQ.astro';
+import BackToTop from '../../components/blog/BackToTop.astro';
+import SectionImage from '../../components/blog/SectionImage.astro';
+import { getCollection } from 'astro:content';
+import { business } from '../../data/business';
+import pexels from '../../content/pexels.json';
+import { renderMarkdown } from '../../lib/markdown';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const p = post.data;
+
+const images = (pexels as Record<string, any>)[p.slug] || {};
+const hero = images?.hero;
+
+const [bodyMain, afterFaq = ''] = post.body.split(/\n## Frequently asked\n/);
+const stillStuckMatch = afterFaq.match(/## Still stuck[\s\S]*$/);
+const stillStuckBody = stillStuckMatch
+  ? stillStuckMatch[0].replace(/^## Still stuck[^\n]*\n+/, '')
+  : '';
+
+// Extract headings for dynamic TOC
+const headingRegex = /^## (.+)$/gm;
+const tocItems: { id: string; label: string }[] = [];
+let match;
+while ((match = headingRegex.exec(bodyMain)) !== null) {
+  const label = match[1];
+  const id = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  tocItems.push({ id, label });
+}
+tocItems.push({ id: 'frequently-asked', label: 'Frequently asked' });
+tocItems.push({ id: 'still-stuck', label: 'Still stuck? Call us' });
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/blog/' },
+  { name: p.title, url: `/blog/${p.slug}/` },
+];
+---
+
+<BaseLayout
+  title={p.title}
+  description={p.description}
+  canonical={`/blog/${p.slug}/`}
+  ogType="article"
+  publishedTime={p.publishedAt}
+  keywords={p.keywordCluster}
+>
+  <BlogJsonLd
+    title={p.title}
+    description={p.description}
+    slug={`blog/${p.slug}`}
+    publishedAt={p.publishedAt}
+    author={{
+      name: p.author.name,
+      licence: p.author.licence,
+      years: p.author.years,
+    }}
+    faqs={p.faqs}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <article class="container-x pt-10 pb-20 md:pt-14">
+    <div class="mx-auto max-w-3xl">
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Blog', href: '/blog/' },
+          { label: p.title },
+        ]}
+      />
+
+      <h1 class="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tightest text-ink md:text-5xl">
+        {p.title}
+      </h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink/60">
+        <div class="flex items-center gap-2">
+          <div class="grid h-9 w-9 place-items-center rounded-full bg-brand text-xs font-bold text-white">
+            MD
+          </div>
+          <div>
+            <div class="font-medium text-ink">{p.author.name}</div>
+            <div class="text-xs">Licensed plumber · {business.address.suburb}</div>
+          </div>
+        </div>
+        <span aria-hidden="true">·</span>
+        <span>
+          <span class="text-ink/70">Published </span>
+          <time datetime={p.publishedAt}>{formatDate(p.publishedAt)}</time>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span>
+          <span class="text-ink/70">Last updated </span>
+          <time datetime={p.publishedAt}>{formatDate(p.publishedAt)}</time>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span>{p.readingMinutes} min read</span>
+      </div>
+
+      {hero && (
+        <div class="mt-8">
+          <SectionImage image={hero} priority />
+        </div>
+      )}
+
+      <div class="mt-8 rounded-2xl border border-brand/20 bg-brand-soft/60 p-6">
+        <div class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-ink">
+          TL;DR
+        </div>
+        <p class="mt-2 text-[1.02rem] leading-relaxed text-ink/85">{p.tldr}</p>
+      </div>
+
+      <div class="mt-8">
+        <TableOfContents items={tocItems} />
+      </div>
+
+      <div class="mt-10">
+        <div class="prose-plumb" set:html={renderMarkdown(bodyMain, images)} />
+      </div>
+
+      <div class="mt-12 rounded-3xl border border-ink/10 bg-white p-7 shadow-card">
+        <div class="text-xs font-semibold uppercase tracking-[0.18em] text-ink/60">
+          While you're here
+        </div>
+        <h2 class="mt-2 font-display text-xl font-bold tracking-tight md:text-2xl">
+          Other things on this site that'll save you money.
+        </h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v4/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                Toilet repair — flat prices, same-day
+              </a>
+              — if you've read this far and decided you're calling us anyway, here's the service page with the pricing table and what's included in the call-out.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v2/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                Low water pressure: what a plumber actually checks
+              </a>
+              — different problem, same philosophy. Unscrew the aerator before booking anyone, is my unsolicited advice.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-brand">→</span>
+            <span>
+              <a href="/v6/" class="font-semibold text-brand underline-offset-4 hover:underline">
+                The technical-SEO version of this post
+              </a>
+              — for the people who care about that sort of thing. Same words, more schema.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mt-8 text-xs text-ink/70">
+        Further reading:{' '}
+        <a
+          href="https://www.yourhome.gov.au/water/reducing-water-demand"
+          target="_blank"
+          rel="noopener nofollow"
+          class="text-ink/85 underline-offset-4 hover:text-ink hover:underline"
+        >
+          Australian Government — Reducing water demand
+        </a>
+        {' · '}
+        <a
+          href="https://www.bunnings.com.au/our-range/bathroom-plumbing/toilets-accessories"
+          target="_blank"
+          rel="noopener nofollow"
+          class="text-ink/85 underline-offset-4 hover:text-ink hover:underline"
+        >
+          Bunnings — toilet parts &amp; flapper kits
+        </a>
+      </div>
+
+      <section id="frequently-asked" class="mt-14">
+        {images?.['frequently-asked'] && (
+          <div class="mb-6">
+            <SectionImage image={images['frequently-asked']} />
+          </div>
+        )}
+        <div class="eyebrow">Frequently asked</div>
+        <h2 class="mt-3 font-display text-2xl font-bold tracking-tightest md:text-3xl">
+          Straight answers, marked up for Google.
+        </h2>
+        <dl class="mt-6 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white shadow-card">
+          {p.faqs.map((f) => (
+            <div class="p-6">
+              <dt class="font-display text-base font-bold tracking-tight md:text-lg">
+                {f.q}
+              </dt>
+              <dd class="mt-2 text-sm leading-relaxed text-ink/75">{f.a}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="mt-3 text-xs text-ink/70">
+          These Q&amp;As are also emitted as FAQPage schema in the page head — Google
+          may show the answers directly in the search results. Or not. You never really know
+          with Google.
+        </p>
+      </section>
+
+      <section id="still-stuck" class="mt-14">
+        {images?.['still-stuck-give-us-a-call'] && (
+          <div class="mb-6">
+            <SectionImage image={images['still-stuck-give-us-a-call']} />
+          </div>
+        )}
+        <h2 class="font-display text-2xl font-bold tracking-tightest md:text-3xl">
+          Still stuck? Give us a call.
+        </h2>
+        {stillStuckBody && (
+          <div class="prose-plumb mt-4" set:html={renderMarkdown(stillStuckBody)} />
+        )}
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="tel:+61390418200" class="btn-brand">
+            Call {business.phone}
+          </a>
+          <a href="/v4/" class="btn-primary">
+            See our toilet repair page
+          </a>
+        </div>
+      </section>
+
+      <div class="mt-12">
+        <AuthorCard
+          name={p.author.name}
+          role={p.author.role}
+          licence={p.author.licence}
+          years={p.author.years}
+          bio={p.author.bio}
+        />
+      </div>
+
+      <BackToTop />
+    </div>
+  </article>
+</BaseLayout>

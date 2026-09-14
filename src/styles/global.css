@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0B0B0F;
+  --color-paper: #F6F5F1;
+  --color-mist: #ECEAE3;
+  --color-brand: #5B4BFF;
+  --color-brand-ink: #2A1F99;
+  --color-brand-soft: #EEEBFF;
+  --color-accent: #FFE27A;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --tracking-tightest: -0.035em;
+  --shadow-card: 0 1px 2px rgba(11,11,15,0.04), 0 12px 32px -12px rgba(11,11,15,0.12);
+  --radius-xl2: 1.25rem;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-sans;
+}
+
+::selection {
+  background: #5B4BFF;
+  color: white;
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-[1280px] px-6 md:px-10;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all;
+}
+
+@utility btn-primary {
+  @apply btn bg-ink text-paper hover:bg-brand hover:text-white;
+}
+
+@utility btn-brand {
+  @apply btn bg-brand text-white hover:bg-brand-ink;
+}
+
+@utility btn-ghost {
+  @apply btn text-ink/80 hover:text-ink;
+}
+
+@utility eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.18em] text-ink/60;
+}
+
+@utility prose-plumb {
+  @apply max-w-none;
+}
+
+.prose-plumb h2 {
+  @apply mt-14 mb-4 font-display text-3xl font-bold tracking-tightest md:text-4xl;
+}
+.prose-plumb h3 {
+  @apply mt-10 mb-3 font-display text-xl font-bold tracking-tight md:text-2xl;
+}
+.prose-plumb p {
+  @apply my-5 text-[1.06rem] leading-[1.75] text-ink/80;
+}
+.prose-plumb ul {
+  @apply my-5 list-disc space-y-2 pl-6 text-ink/80;
+}
+.prose-plumb ol {
+  @apply my-5 list-decimal space-y-2 pl-6 text-ink/80;
+}
+.prose-plumb a {
+  @apply font-medium text-brand underline-offset-4 hover:underline;
+}
+.prose-plumb blockquote {
+  @apply my-8 border-l-4 border-brand/30 bg-brand-soft/60 px-6 py-4 text-ink/85;
+}
+.prose-plumb strong {
+  @apply font-semibold text-ink;
+}
+.prose-plumb code {
+  @apply rounded bg-ink/5 px-1.5 py-0.5 font-mono text-[0.9em];
+}
+
+@utility squiggle {
+  background-image: linear-gradient(to right, rgba(91, 75, 255, 0.4) 50%, transparent 50%);
+  background-size: 8px 2px;
+  background-position: 0 100%;
+  background-repeat: repeat-x;
+  padding-bottom: 2px;
+}

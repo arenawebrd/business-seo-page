@@ -1,0 +1,297 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FeatureGrid from '../../components/home/FeatureGrid.astro';
+import HowItWorks from '../../components/home/HowItWorks.astro';
+import { baldwinParkLanding as loc } from '../../data/landing-baldwin-park';
+---
+
+<BaseLayout
+  title={`Plumber in ${loc.city}, ${loc.state} · Same-day, flat price | Plumbing Co`}
+  description={`Licensed plumber in ${loc.city}, ${loc.state}. Same-day service across the ${loc.county} — blocked drains, hot water, leaks. Flat price, no call-out fee. Call ${loc.phone}.`}
+  canonical="/v4/"
+  ogType="website"
+>
+  {/* LocalBusiness schema — Baldwin Park branch */}
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Plumber",
+    name: `Plumbing Co — ${loc.city}`,
+    url: "https://plumbing-co.example.com/v4/",
+    telephone: loc.phoneE164,
+    email: loc.email,
+    priceRange: "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: loc.address.street,
+      addressLocality: loc.address.suburb,
+      addressRegion: loc.address.state,
+      postalCode: loc.address.postcode,
+      addressCountry: loc.address.country,
+    },
+    areaServed: loc.serviceAreas.map((s) => ({ "@type": "City", name: s })),
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: loc.review.rating,
+      reviewCount: loc.review.count,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "07:00",
+        closes: "19:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Saturday",
+        opens: "08:00",
+        closes: "17:00",
+      },
+    ],
+  })} />
+
+  {/* Hero */}
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-[radial-gradient(1200px_400px_at_50%_-100px,rgba(91,75,255,0.10),transparent_60%)]" />
+    </div>
+
+    <div class="container-x pt-10 pb-16 md:pt-16 md:pb-24">
+      <div class="mx-auto max-w-4xl text-center">
+        <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-1.5 text-xs font-medium text-ink/70 shadow-sm">
+          <span class="flex h-2 w-2">
+            <span class="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-emerald-400 opacity-70"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+          </span>
+          Available today in {loc.city}, {loc.state}
+        </div>
+
+        <h1 class="font-display text-[2.4rem] font-bold leading-[1.02] tracking-tightest text-ink md:text-[4rem] lg:text-[4.6rem]">
+          Plumber in {loc.city},
+          <br />
+          {loc.state}. Same-day, flat price.
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-xl text-base text-ink/70 md:text-lg">
+          Licensed California plumbers serving {loc.city} and the {loc.county} since{" "}
+          {loc.foundedLocal}. Upfront pricing, no call-out fee surprises, and we clean up before
+          we leave.
+        </p>
+
+        {/* Search-bar style CTA */}
+        <div class="mx-auto mt-8 w-full max-w-2xl rounded-2xl border border-ink/10 bg-white p-2 shadow-card md:mt-10">
+          <div class="flex flex-col items-stretch gap-2 md:flex-row md:items-center">
+            <div class="flex items-center gap-2 rounded-xl px-4 py-3 md:w-48 md:border-r md:border-ink/10">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M8 14s5-4.5 5-8a5 5 0 1 0-10 0c0 3.5 5 8 5 8Z"
+                  stroke="#0B0B0F"
+                  stroke-width="1.5"
+                />
+                <circle cx="8" cy="6" r="2" stroke="#0B0B0F" stroke-width="1.5" />
+              </svg>
+              <span class="truncate text-sm font-semibold text-ink">
+                {loc.city}, {loc.state}
+              </span>
+            </div>
+            <div class="flex-1 truncate whitespace-nowrap px-4 py-3 text-left text-sm text-ink/60">
+              What's going wrong?
+            </div>
+            <a href={`tel:${loc.phoneE164}`} class="btn-brand w-full md:w-auto">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5" />
+                <path
+                  d="M9 9l3 3"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Get a quote
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-ink/60">
+          <div class="flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3 8l3 3 7-7"
+                stroke="#16a34a"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Licensed CA #{loc.licenseNumber}
+          </div>
+          <div class="flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3 8l3 3 7-7"
+                stroke="#16a34a"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            {loc.review.rating}★ from {loc.review.count} Google reviews
+          </div>
+          <div class="flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3 8l3 3 7-7"
+                stroke="#16a34a"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            No call-out fee
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Feature grid */}
+  <FeatureGrid />
+
+  {/* How it works */}
+  <HowItWorks />
+
+  {/* Testimonials — Baldwin Park customers */}
+  <section class="container-x mt-24 md:mt-32">
+    <div class="mb-10 flex items-end justify-between gap-6">
+      <div>
+        <div class="eyebrow">What neighbors say</div>
+        <h2 class="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+          {loc.review.count} reviews. <br class="hidden md:block" />
+          {loc.review.rating} average. No bots.
+        </h2>
+      </div>
+      <a
+        href="#"
+        class="hidden items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-medium text-ink/80 hover:bg-ink/5 md:inline-flex"
+      >
+        Read on Google
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M3 11L11 3M5 3h6v6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+      {loc.testimonials.map((r) => (
+        <figure
+          class="flex flex-col justify-between rounded-3xl border border-ink/10 bg-white p-7 shadow-card"
+        >
+          <blockquote class="text-[15px] leading-relaxed text-ink/85">
+            &ldquo;{r.quote}&rdquo;
+          </blockquote>
+          <figcaption class="mt-6 flex items-center justify-between">
+            <div>
+              <div class="font-semibold text-ink">{r.author}</div>
+              <div class="text-xs text-ink/60">{r.suburb}</div>
+            </div>
+            <div class="text-sm tracking-tighter text-amber-500">★★★★★</div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  {/* Service areas */}
+  <section class="container-x mt-24 md:mt-32">
+    <div class="overflow-hidden rounded-3xl bg-ink p-10 text-paper md:p-16">
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-12 md:items-end">
+        <div class="md:col-span-7">
+          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-paper/60">
+            Where we work
+          </div>
+          <h2 class="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+            {loc.city} and the {loc.county}. <br />
+            <span class="text-brand">On the road in under 60 minutes.</span>
+          </h2>
+          <p class="mt-5 max-w-xl text-paper/70">
+            We keep our service radius tight so our vans are never more than 20 minutes from
+            your address. That's how same-day actually works.
+          </p>
+        </div>
+
+        <div class="md:col-span-5">
+          <ul class="flex flex-wrap gap-2">
+            {loc.serviceAreas.map((area) => (
+              <li
+                class="rounded-full border border-paper/15 bg-paper/5 px-4 py-2 text-sm text-paper/90 backdrop-blur"
+              >
+                {area}
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 text-xs text-paper/50">
+            Not sure if we cover your area? Call {loc.phone} — if we can't, we'll recommend
+            someone we trust.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Final CTA */}
+  <section id="contact" class="container-x mt-24 md:mt-32">
+    <div class="relative overflow-hidden rounded-3xl border border-ink/10 bg-paper p-10 md:p-16">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_300px_at_80%_10%,rgba(91,75,255,0.12),transparent_60%)]"
+      />
+      <div class="relative grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+        <div class="md:col-span-7">
+          <h2 class="font-display text-3xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+            Got a leak in {loc.city}? <br />
+            Let's fix it today.
+          </h2>
+          <p class="mt-4 max-w-xl text-ink/70">
+            Call now and speak to a real plumber — no call center, no sales script. We'll tell
+            you what it'll cost before anyone gets in a van.
+          </p>
+        </div>
+
+        <div class="flex flex-col items-start gap-3 md:col-span-5 md:items-end">
+          <a
+            href={`tel:${loc.phoneE164}`}
+            class="group inline-flex items-center gap-3 rounded-full bg-ink px-6 py-4 text-paper transition-all hover:bg-brand"
+          >
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M3 4a1 1 0 0 1 1-1h2l1 3-1.5 1A8 8 0 0 0 9 12l1-1.5 3 1v2a1 1 0 0 1-1 1A10 10 0 0 1 3 4Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span class="font-display text-xl font-bold">{loc.phone}</span>
+          </a>
+          <a
+            href={`mailto:${loc.email}`}
+            class="text-sm font-medium text-ink/70 underline-offset-4 hover:text-ink hover:underline"
+          >
+            or email {loc.email} →
+          </a>
+          <a
+            href="/v5/"
+            class="text-xs text-ink/70 underline-offset-4 hover:text-ink hover:underline"
+          >
+            Related: our guide to running toilets →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

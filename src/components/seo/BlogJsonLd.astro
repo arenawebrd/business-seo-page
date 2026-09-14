@@ -1,0 +1,68 @@
+---
+import { business } from '../../data/business';
+
+interface Props {
+  title: string;
+  description: string;
+  slug: string;
+  publishedAt: string;
+  author: { name: string; licence: string; years: number };
+  faqs?: { q: string; a: string }[];
+  breadcrumbs?: { name: string; url: string }[];
+}
+
+const { title, description, slug, publishedAt, author, faqs, breadcrumbs = [] } = Astro.props;
+
+const base = business.siteUrl.replace(/\/$/, "");
+const url = `${base}/${slug}/`;
+
+const article = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description,
+  author: {
+    "@type": "Person",
+    name: author.name,
+    jobTitle: "Licensed plumber",
+    identifier: author.licence,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: business.name,
+    url: base,
+  },
+  datePublished: publishedAt,
+  dateModified: publishedAt,
+  mainEntityOfPage: url,
+};
+
+const breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: b.name,
+    item: `${base}${b.url}`,
+  })),
+};
+
+const faqPage = faqs && faqs.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    }
+  : null;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(article)} />
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbList)} />
+{faqPage && (
+  <script type="application/ld+json" set:html={JSON.stringify(faqPage)} />
+)}

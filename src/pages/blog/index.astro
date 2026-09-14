@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import pexels from '../../content/pexels.json';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) =>
+  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+);
+
+const runningToiletImg = (pexels as Record<string, any>)["plumber-for-running-toilet"]?.hero;
+const lowWaterImg = (pexels as Record<string, any>)["plumber-for-low-water-pressure"]?.hero;
+
+function getImage(slug: string) {
+  if (slug === 'plumber-for-running-toilet') return runningToiletImg;
+  if (slug === 'plumber-for-low-water-pressure-v2' || slug === 'plumber-for-low-water-pressure-v3' || slug === 'low-water-pressure') return lowWaterImg;
+  return null;
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+---
+
+<BaseLayout
+  title="Plumbing advice & guides — Plumbing Co"
+  description="Honest, plainly-written plumbing advice from a licensed Melbourne plumber. Fix it yourself where you can. Know when to call someone where you can't."
+  canonical="/blog/"
+>
+  <section class="container-x pt-10 pb-20 md:pt-16">
+    <header class="mx-auto max-w-3xl text-center">
+      <div class="eyebrow">The blog</div>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tightest md:text-6xl">
+        Plumbing advice, <span class="squiggle">plainly written</span>.
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-ink/70">
+        Fix it yourself where you can. Know when to call someone where you can't. Written by a
+        licensed plumber who'd rather talk you out of a job than charge for a kettle.
+      </p>
+    </header>
+
+    {/* All posts */}
+    <div class="mt-14 grid gap-5 md:grid-cols-2">
+      {sortedPosts.map((post, i) => {
+        const img = getImage(post.data.slug);
+        return (
+          <a
+            href={`/blog/${post.data.slug}/`}
+            class:list={[
+              "group relative flex flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-card transition-shadow hover:border-brand/30 hover:shadow-xl",
+              i === 0 ? "md:grid md:grid-cols-5" : "",
+            ]}
+          >
+            <div class:list={[
+              "relative bg-brand-soft",
+              i === 0 ? "aspect-[4/3] md:col-span-2 md:aspect-auto" : "aspect-[4/3]",
+            ]}>
+              {img ? (
+                <img
+                  src={img.file}
+                  alt={img.alt}
+                  class="h-full w-full object-cover"
+                />
+              ) : (
+                <div class="flex h-full items-center justify-center">
+                  <svg width="80" height="80" viewBox="0 0 120 120" fill="none">
+                    <circle cx="60" cy="60" r="44" stroke="#0B0B0F" stroke-width="3" />
+                    <path d="M60 36v48M36 60h48" stroke="#5B4BFF" stroke-width="3" stroke-linecap="round" />
+                  </svg>
+                </div>
+              )}
+              {i === 0 && (
+                <div class="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-paper">
+                  Featured
+                </div>
+              )}
+            </div>
+            <div class:list={[
+              "p-7",
+              i === 0 ? "md:col-span-3 md:p-10" : "",
+            ]}>
+              <div class="flex items-center gap-3 text-xs text-ink/60">
+                <span>{formatDate(post.data.publishedAt)}</span>
+                <span>·</span>
+                <span>{post.data.readingMinutes} min read</span>
+                <span>·</span>
+                <span>{post.data.author.name}</span>
+              </div>
+              <h2 class:list={[
+                "mt-3 font-display font-bold leading-tight tracking-tight",
+                i === 0 ? "text-2xl md:text-4xl" : "text-xl",
+              ]}>
+                {post.data.title}
+              </h2>
+              <p class:list={[
+                "mt-3 text-ink/75",
+                i === 0 ? "max-w-xl text-base" : "text-sm line-clamp-2",
+              ]}>
+                {post.data.description}
+              </p>
+              <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand">
+                Read the full guide
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                  <path d="M3 7h8m-3-4 4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    {/* Empty state */}
+    <div class="mx-auto mt-12 max-w-xl rounded-2xl border border-dashed border-ink/15 bg-white/50 p-8 text-center">
+      <div class="mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand-soft text-brand">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="mt-4 font-display text-lg font-bold tracking-tight">More guides on the way.</div>
+      <p class="mt-2 text-sm text-ink/60">
+        Writing the next one between jobs. If there's a plumbing question you want answered honestly,
+        email <a href="mailto:hello@plumbingco.com.au" class="font-semibold text-brand hover:underline">hello@plumbingco.com.au</a> and I'll put it on the list.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

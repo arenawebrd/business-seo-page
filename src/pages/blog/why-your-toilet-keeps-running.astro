@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BackToTop from '../../components/blog/BackToTop.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import Breadcrumbs from '../../components/blog/Breadcrumbs.astro';
+import FAQ from '../../components/blog/FAQ.astro';
+import BlogBody from '../../components/blog/BlogBody.astro';
+import AuthorCard from '../../components/blog/AuthorCard.astro';
+import BlogJsonLd from '../../components/seo/BlogJsonLd.astro';
+import { business } from '../../data/business';
+
+const p = {
+  title: "Why your toilet keeps running — and how to actually fix it",
+  description: "Phantom flushing, slow fill, or a flapper that won\'t seat — the common causes and what you can safely try yourself before calling.",
+  slug: "why-your-toilet-keeps-running",
+  publishedAt: "2024-01-15",
+  readingMinutes: 6,
+  author: {
+    name: "Marco Reyes",
+    role: "Licensed Plumber",
+    licence: "VIC-PL-48217",
+    years: 14,
+    bio: "Marco\'s run his own plumbing business in Melbourne\'s inner south since 2009. He\'s fixed more running toilets than he\'d care to count, and he\'d rather talk you through a $0 fix on the phone than send a van out for a washer.",
+  },
+  faqs: [
+    { q: "Can a running toilet cause damage?", a: "A slow leak into the bowl won\'t damage anything, but a fill valve stuck wide open will overflow the cistern and flood the bathroom. If the water\'s running continuously and the overflow pipe inside the cistern is dripping, turn the isolation valve off and call someone." },
+    { q: "How much does it cost to fix a running toilet?", a: "DIY: $20–$50 in parts. We charge $149 all-in for a flapper or fill valve replacement, including the visit and the exact part for your model." },
+    { q: "Should I try to fix it myself?", a: "If you\'re handy and the water\'s off at the isolation valve, yeah — a flapper swap is a 15-minute job. If you\'re not sure which part is failing, ring us on the phone first. We\'ll talk you through it for free." },
+  ],
+};
+
+const bodyMarkdown = `A running toilet is one of those problems that\'s easy to ignore until you see the water bill. Then it becomes a problem you can\'t ignore. The good news: most of the time it\'s not a $1,000 plumbing emergency — it\'s a $3 flapper that\'s gone hard, or a fill valve that\'s got a bit of grit in it.`;
+
+const toc = [
+  { id: "what-causes-it", label: "What causes a running toilet?" },
+  { id: "diagnose", label: "Diagnose which part is failing" },
+  { id: "diy-fix", label: "The DIY fix (if you\'re comfortable)" },
+  { id: "when-to-call", label: "When to call a plumber" },
+];
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+---
+
+<BaseLayout
+  title="Why your toilet keeps running — and how to actually fix it"
+  description={p.description}
+  canonical="/blog/why-your-toilet-keeps-running/"
+>
+  <BlogJsonLd
+    title={p.title}
+    description={p.description}
+    slug="why-your-toilet-keeps-running"
+    publishedAt={p.publishedAt}
+    author={{ name: p.author.name, licence: p.author.licence, years: p.author.years }}
+    faqs={p.faqs}
+    breadcrumbs={[
+      { name: "Home", url: "/" },
+      { name: "Blog", url: "/blog/" },
+      { name: p.title, url: "/blog/why-your-toilet-keeps-running/" },
+    ]}
+  />
+
+  <article class="container-x pt-10 pb-20 md:pt-14">
+    <div class="mx-auto max-w-3xl">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Blog", href: "/blog/" },
+        { label: "Running toilet" },
+      ]} />
+
+      <h1 class="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+        {p.title}
+      </h1>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink/60">
+        <div class="flex items-center gap-2">
+          <div class="grid h-9 w-9 place-items-center rounded-full bg-brand text-xs font-bold text-white">
+            MR
+          </div>
+          <div>
+            <div class="font-medium text-ink">{p.author.name}</div>
+            <div class="text-xs">Licensed plumber · {business.address.suburb}</div>
+          </div>
+        </div>
+        <span aria-hidden="true">·</span>
+        <span>
+          <span class="text-ink/70">Published </span>
+          <time dateTime={p.publishedAt}>{formatDate(p.publishedAt)}</time>
+        </span>
+        <span aria-hidden="true">·</span>
+        <span>{p.readingMinutes} min read</span>
+      </div>
+
+      <div class="mt-10">
+        <BlogBody markdown={bodyMarkdown} />
+      </div>
+
+      <FAQ faqs={p.faqs} />
+
+      <div class="mt-12">
+        <AuthorCard
+          name={p.author.name}
+          role={p.author.role}
+          licence={p.author.licence}
+          years={p.author.years}
+          bio={p.author.bio}
+        />
+      </div>
+
+      <BackToTop />
+    </div>
+  </article>
+</BaseLayout>

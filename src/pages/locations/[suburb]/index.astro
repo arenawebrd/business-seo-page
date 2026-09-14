@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { locations } from '../../../data/locations';
+import { business } from '../../../data/business';
+
+export async function getStaticPaths() {
+  return locations.map((loc) => ({
+    params: { suburb: loc.slug },
+    props: { loc },
+  }));
+}
+
+const { loc } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Locations', url: '/locations/' },
+  { name: loc.suburb },
+];
+---
+
+<BaseLayout
+  title={`${loc.suburb} plumber — Plumbing Co`}
+  description={loc.description}
+  canonical={`/locations/${loc.slug}/`}
+>
+  <section class="container-x pt-10 pb-20 md:pt-16">
+    <nav class="mx-auto max-w-3xl text-sm text-ink/60">
+      <a href="/" class="hover:text-brand">Home</a>
+      <span class="mx-2">/</span>
+      <a href="/locations/" class="hover:text-brand">Locations</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">{loc.suburb}</span>
+    </nav>
+
+    <header class="mx-auto mt-8 max-w-3xl text-center">
+      <div class="eyebrow">Plumber in {loc.suburb}</div>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-[1.05] tracking-tightest md:text-6xl">
+        {loc.tagline}
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-ink/70">
+        {loc.description}
+      </p>
+      <div class="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-2 text-sm font-medium text-brand-ink">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+          <path d="M8 1v6l3 3" stroke="currentColor" strokeWidth="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5"/>
+        </svg>
+        {loc.distance}
+      </div>
+    </header>
+
+    {/* Services in this area */}
+    <div class="mx-auto mt-14 max-w-3xl">
+      <h2 class="font-display text-2xl font-bold tracking-tightest md:text-3xl">
+        Services we offer in {loc.suburb}
+      </h2>
+      <div class="mt-6 grid gap-3 sm:grid-cols-2">
+        {loc.services.map((service) => (
+          <div class="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white p-5 shadow-card">
+            <div class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="font-medium text-ink">{service}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Highlight — matches homepage FinalCta */}
+    <section id="contact" class="container-x mt-12">
+      <div class="relative overflow-hidden rounded-3xl border border-ink/10 bg-paper p-10 md:p-16">
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_300px_at_80%_10%,rgba(91,75,255,0.12),transparent_60%)]"
+        />
+        <div class="relative grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+          <div class="md:col-span-7">
+            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-ink/60">
+              Why us in {loc.suburb}
+            </div>
+            <h2 class="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+              {loc.highlight}
+            </h2>
+            <p class="mt-4 max-w-xl text-ink/70">
+              Flat prices, approved before we start. No call-out fee if we can't help.
+            </p>
+          </div>
+
+          <div class="flex flex-col items-start gap-3 md:col-span-5 md:items-end">
+            <a
+              href={`tel:${business.phoneE164}`}
+              class="group inline-flex items-center gap-3 rounded-full bg-ink px-6 py-4 text-paper transition-all hover:bg-brand"
+            >
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3 4a1 1 0 0 1 1-1h2l1 3-1.5 1A8 8 0 0 0 9 12l1-1.5 3 1v2a1 1 0 0 1-1 1A10 10 0 0 1 3 4Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="font-display text-xl font-bold">{business.phone}</span>
+            </a>
+            <a
+              href={`mailto:${business.email}`}
+              class="text-sm font-medium text-ink/70 underline-offset-4 hover:text-ink hover:underline"
+            >
+              or email {business.email} →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Other locations */}
+    <section class="container-x mt-16">
+      <h2 class="font-display text-2xl font-bold tracking-tightest md:text-3xl">
+        Other areas we service
+      </h2>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {locations.filter((l) => l.slug !== loc.slug).map((l) => (
+          <a
+            href={`/locations/${l.slug}/`}
+            class="rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-medium text-ink/80 shadow-card transition-all hover:border-brand/30 hover:text-brand"
+          >
+            {l.suburb}
+          </a>
+        ))}
+      </div>
+    </section>
+  </section>
+</BaseLayout>

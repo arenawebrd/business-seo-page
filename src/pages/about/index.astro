@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { business } from '../../data/business';
+---
+
+<BaseLayout
+  title="About | Plumbing Co"
+  description="About Plumbing Co — licensed plumbers serving Melbourne's inner south since 2009."
+  canonical="/about/"
+>
+  <section class="container-x py-10 md:py-16">
+    <div class="mx-auto max-w-3xl">
+      <h1 class="font-display text-4xl font-bold tracking-tightest text-ink md:text-5xl">
+        About Plumbing Co
+      </h1>
+
+      <div class="mt-10 space-y-8 text-ink/70">
+        <p class="text-lg">
+          Plumbing Co started in 2009 in a borrowed garage in Windsor. Marco D'Agostino had been a licensed plumber since 2004 and was tired of watching other tradies rip people off on emergency jobs. So he started his own business with one rule: honest pricing, every time.
+        </p>
+
+        <p>
+          That rule stuck. Seventeen years later, we've completed over {business.jobsCompleted.toLocaleString()} jobs across Melbourne's inner south. We still answer the phone ourselves. We still quote flat, all-in prices before we start. And we still clean up before we leave.
+        </p>
+
+        <div class="rounded-2xl border border-ink/10 bg-white p-8 shadow-card">
+          <h2 class="font-display text-xl font-bold text-ink">By the numbers</h2>
+          <div class="mt-6 grid gap-6 md:grid-cols-3">
+            <div class="text-center">
+              <div class="font-display text-3xl font-bold text-brand">{business.founded}</div>
+              <div class="mt-1 text-sm text-ink/60">Founded</div>
+            </div>
+            <div class="text-center">
+              <div class="font-display text-3xl font-bold text-brand">{business.jobsCompleted.toLocaleString()}+</div>
+              <div class="mt-1 text-sm text-ink/60">Jobs completed</div>
+            </div>
+            <div class="text-center">
+              <div class="font-display text-3xl font-bold text-brand">{business.review.rating}★</div>
+              <div class="mt-1 text-sm text-ink/60">{business.review.count} Google reviews</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="font-display text-2xl font-bold tracking-tightest text-ink">
+          What we do
+        </h2>
+
+        <p>
+          We're generalist plumbers. If it involves water, gas, or pipes, we can fix it. The most common jobs:
+        </p>
+
+        <ul class="space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Blocked drains
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Leak repairs
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Toilet repairs
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Hot water systems
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Gas fitting
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 text-brand">→</span>
+            Emergency plumbing
+          </li>
+        </ul>
+
+        <h2 class="font-display text-2xl font-bold tracking-tightest text-ink">
+          Where we work
+        </h2>
+
+        <p>
+          We serve Melbourne's inner south: {business.serviceAreas.join(', ')}. If you're outside these suburbs, give us a call anyway — we might still be able to help.
+        </p>
+
+        <h2 class="font-display text-2xl font-bold tracking-tightest text-ink">
+          Licence
+        </h2>
+
+        <p>
+          Marco holds Victorian plumbing licence {business.licenseNumber}. We're fully insured and all work comes with a 12-month workmanship warranty.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

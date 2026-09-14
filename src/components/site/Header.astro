@@ -1,0 +1,42 @@
+---
+import Logo from './Logo.astro';
+import { business } from '../../data/business';
+
+const nav = [
+  { label: 'Services', href: '/services/' },
+  { label: 'Locations', href: '/locations/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'Contact', href: '/contact/' },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-ink/5 bg-paper/80 backdrop-blur">
+  <div class="container-x flex h-16 items-center justify-between gap-4 md:h-20">
+    <a href="/" aria-label={`${business.name} home`} class="shrink-0">
+      <Logo />
+    </a>
+
+    <nav aria-label="Primary" class="hidden items-center gap-1 md:flex">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class="rounded-full px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-ink/5 hover:text-ink"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={`tel:${business.phoneE164}`}
+        class="hidden text-sm font-semibold text-ink/80 hover:text-ink lg:inline"
+      >
+        {business.phone}
+      </a>
+      <a href={`tel:${business.phoneE164}`} class="btn-brand">
+        Call now
+      </a>
+    </div>
+  </div>
+</header>

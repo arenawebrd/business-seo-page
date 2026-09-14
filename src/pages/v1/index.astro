@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VersionBanner from '../../components/blog/VersionBanner.astro';
+import BackToTop from '../../components/blog/BackToTop.astro';
+import FAQ from '../../components/blog/FAQ.astro';
+
+const demoContent = {
+  slug: 'scaffolded-site',
+  title: 'Chapter 2 — Scaffolded Site (v1)',
+  sections: [
+    {
+      heading: 'What this version is',
+      content: 'This is the bare minimum: a site generated from a one-line prompt. A layout, a homepage, a services page, a blog index. No voice, no custom content, no schema. Just enough structure to be crawlable.',
+    },
+    {
+      heading: "What's missing",
+      content: 'No LocalBusiness schema, no breadcrumbs, no structured data at all. No blog posts with real content. No service detail pages. The site is technically valid HTML but has no semantic richness for Google to work with.',
+    },
+    {
+      heading: 'What we learned',
+      content: "A scaffolded site is fine as a starting point. But \"SEO\" doesn't start at the scaffold — it starts at the content. This version gives us the canvas. The next versions paint on it.",
+    },
+  ],
+};
+
+const faqs = [
+  { q: 'What is a scaffolded site?', a: 'A minimal site generated from a prompt or template, with just enough structure to be functional. No custom content, no schema, no optimization. A starting point, not a finished site.' },
+  { q: 'Is a scaffolded site enough for SEO?', a: "Not on its own. Google can crawl it, but there's no semantic content, no local business signals, no structured data. It's a technically valid but SEO-empty site." },
+  { q: 'What comes after the scaffold?', a: 'Content first — voice-injected, locally relevant, structured. Then on-page SEO (schema, breadcrumbs, TOC, author). Then technical SEO (sitemap, OG images, Core Web Vitals). Each chapter in this demo adds one layer.' },
+];
+---
+
+<BaseLayout
+  title="Chapter 2 — Scaffolded Site (v1)"
+  description="The bare minimum: a site generated from a one-line prompt. A layout, a homepage, a services page, a blog index. No voice, no custom content, no schema."
+  canonical="/v1/"
+>
+  <article class="container-x pt-10 pb-20 md:pt-14">
+    <div class="mx-auto max-w-3xl">
+      <VersionBanner version="v1" title="Chapter 2 — Scaffolded Site" body="The bare minimum site generated from a one-line prompt." />
+
+      <h1 class="mt-8 font-display text-4xl font-bold leading-[1.05] tracking-tightest md:text-5xl">
+        Scaffolded Site
+      </h1>
+      <p class="mt-4 text-lg text-ink/70">
+        What this version is, what's missing, and what we learned.
+      </p>
+
+      <div class="mt-12 space-y-8">
+        {demoContent.sections.map((s) => (
+          <section>
+            <h2 class="font-display text-xl font-bold text-ink">{s.heading}</h2>
+            <p class="mt-3 text-ink/80 leading-relaxed">{s.content}</p>
+          </section>
+        ))}
+      </div>
+
+      <FAQ faqs={faqs} />
+
+      <BackToTop />
+    </div>
+  </article>
+</BaseLayout>

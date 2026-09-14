@@ -1,0 +1,25 @@
+---
+import { business } from '../../data/business';
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: business.name,
+  legalName: business.legalName,
+  url: business.siteUrl,
+  logo: `${business.siteUrl}/og/logo.png`,
+  telephone: business.phoneE164,
+  email: business.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.address.street,
+    addressLocality: business.address.suburb,
+    addressRegion: business.address.state,
+    postalCode: business.address.postcode,
+    addressCountry: business.address.country,
+  },
+  sameAs: [business.socials.google, business.socials.instagram, business.socials.facebook],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(data)} />
