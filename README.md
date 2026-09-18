@@ -1,93 +1,89 @@
-# SEO — live demo site
+# Local business SEO starter for Astro
 
-Six pages in one Astro project, each showing a stage of the SEO workflow for a fictional Melbourne plumber (Plumbing Co) plus a California landing page. Every page is statically pre-rendered — view-source on any route shows finished HTML.
+A reusable Astro starter for local service businesses that need a fast, static, SEO-friendly website with structured data, service pages, location pages, blog support, and a spreadsheet-friendly data layer.
 
-## The six versions
+This project originally started as a demo of the SEO workflow for a fictional Melbourne plumber, but it has been refactored into a more reusable template for real-world local businesses.
 
-| Route | Stage | What's demonstrated |
-|---|---|---|
-| `/v1` | Scaffolded site | Claude Code builds the homepage from a prompt |
-| `/v2` | AI blog slop | Generic AI blog post with no voice files |
-| `/v3` | Voice-injected | Same post rewritten using `references/voice.md` + `humour.md` + `stats.md` + `stories.md` + `opinions.md` |
-| `/v4` | Landing page | City+service landing page (`plumber baldwin park ca`), homepage silhouette, local NAP schema |
-| `/v5` | On-page SEO | v3's post run through the 15-category, 80+ item on-page SEO checklist |
-| `/v6` | Technical SEO | v5 + sitemap, robots, OG images, Organization schema, favicon |
+## Highlights
 
-## Stack
+- Astro 5 + TypeScript + Tailwind CSS 4
+- Static export with SSG for SEO and performance
+- Reusable configuration layer (`src/config`)
+- Spreadsheet-friendly CSV data input via `examples/template-data/`
+- Import script for normalizing tabular data to generated config (`scripts/import-template.mjs`)
+- Local business SEO structure with schema.org components
+- Service, location, and blog-ready content foundation
+- Feature flags for enabling/disabling sections like blog, locations, pricing, contact form, and WhatsApp
 
-- **Astro 5** with `output: 'static'` — full SSG, no runtime server
-- **TypeScript**
-- **Tailwind CSS 4**
-- **Pexels API** for build-time images (optional — run `node scripts/fetch-pexels.mjs` to download)
+## Project structure
 
-## Local dev
+```text
+src/
+  components/
+  config/
+  data/
+  generated/
+  layouts/
+  pages/
+  styles/
+examples/
+  template-data/
+scripts/
+  import-template.mjs
+docs/
+  template-data.md
+```
+
+## Quick start
 
 ```bash
 npm install
-npm run dev     # http://localhost:4321
-npm run build   # static export to dist/
+npm run import:template
+npm run dev
 ```
 
-## Email configuration
-
-The contact form uses `mailto:` by default (works without a backend). For production, configure email sending in `.env`:
+## Build
 
 ```bash
-# Provider: "smtp" | "gmail" | "resend"
-EMAIL_PROVIDER=smtp
-EMAIL_TO=hello@plumbingco.com.au
-EMAIL_FROM=noreply@plumbingco.com.au
-
-# SMTP custom
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASS=
-
-# Gmail (app password required)
-GMAIL_USER=
-GMAIL_PASS=
-
-# Resend
-RESEND_API_KEY=
+npm run build
 ```
 
-The email utility is at `src/lib/email.ts`. Import `sendEmail()` from there when deploying with SSR.
+## CSV / sheet workflow
 
-## Pexels images
+This starter supports a simple workbook-style workflow:
 
-Set `PEXEL_API` in `.env` and run:
+- fill tables in CSV files under `examples/template-data/`
+- run the importer to normalize the data
+- use the generated payload as the app's configuration layer
+
+Example:
 
 ```bash
-node scripts/fetch-pexels.mjs
+npm run import:template
 ```
 
-This downloads a hero + one image per H2 heading for every blog post, saves them to `/public/images/blog/<post>/<section>.jpg`, and writes photographer attribution to `/content/pexels.json`.
+This reads the CSV files and generates a normalized payload in:
 
-## References folder
+```text
+src/generated/template-data.ts
+```
 
-The voice layer lives in `src/references/`:
+## Notes
 
-- `voice.md` — Marco's writing style
-- `humour.md` — dad-joke frequency, anti-patterns, examples
-- `stats.md` — canonical real numbers (pricing, review counts, response times)
-- `stories.md` — recurring anecdotes
-- `opinions.md` — industry opinions backed by numbers
-- `used-keywords.md` — tracker so primary keywords aren't reused
+The template is designed to be adapted for local businesses such as:
 
-Every content-generation task reads these files first. See `CLAUDE.md` at the root for the full instructions.
+- plumbers
+- electricians
+- cleaners
+- locksmiths
+- dentists
+- clinics
+- home services
+- maintenance businesses
 
-## Keyword research
+This is intentionally a general starter, while the demo content still includes a plumbing example as a reference implementation.
 
-- `keywords.csv` — blog post keyword research (used for v2 / v3 / v5 / v6)
-- `Service-keywords.csv` — city+service keyword research (used for v4)
+## Related docs
 
-## SEO reference files
-
-- `on-page-seo.md` — 80+ item on-page SEO checklist applied to v5
-- `slideshow/onpage-seo-checklist.html` — visual reference for the checklist
-- `slideshow/technical-seo.html` — visual reference for technical SEO
-
----
-
-Built with [Claude Code](https://claude.com/claude-code).
+- `docs/template-data.md` — CSV and spreadsheet workflow
+- `CLAUDE.md` — project-specific working rules and conventions
