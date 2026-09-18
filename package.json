@@ -1,11 +1,13 @@
 {
-  "name": "seo-brief-astro",
+  "name": "local-business-astro-template",
   "type": "module",
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
+    "check": "astro check",
     "build": "astro build",
     "preview": "astro preview",
+    "validate:data": "node scripts/import-template.mjs --validate-only",
     "import:template": "node scripts/import-template.mjs"
   },
   "dependencies": {

@@ -1,95 +1,62 @@
-# Plantilla basada en hojas de cálculo
+# Plantilla de datos basada en hojas de cálculo
 
-Este repositorio incluye una base para trabajar con datos de negocio en formato tabular y convertirlos en una estructura reutilizable para un proyecto Astro.
+Esta carpeta contiene datos de ejemplo para probar el importador y servir como plantilla para nuevos proyectos.
 
-## Carpeta de ejemplo
+## Archivos incluidos
 
-Los ejemplos de entrada viven en:
+- `business.csv`: identidad, dominio, idioma, moneda y datos generales.
+- `contact.csv`: teléfono, email, WhatsApp y proveedor del formulario.
+- `hours.csv`: horarios de apertura.
+- `social.csv`: perfiles sociales y estado de cada enlace.
+- `services.csv`: servicios, precios y servicios destacados.
+- `locations.csv`: localidades y páginas locales.
+- `location-services.csv`: relación entre localidades y servicios.
+- `faqs.csv`: preguntas frecuentes globales, por servicio o por localidad.
+- `testimonials.csv`: testimonios y valoraciones.
 
-```text
-examples/template-data/
-```
-
-Archivos incluidos:
-
-- `business.csv`
-- `contact.csv`
-- `services.csv`
-- `locations.csv`
-
-## Cómo usarlo
+## Uso rápido
 
 ```bash
 npm install
+npm run validate:data
 npm run import:template
+npm run dev
 ```
 
-Ese comando lee los CSV y genera un archivo normalizado en:
+`validate:data` comprueba campos obligatorios, slugs, booleanos, URLs, emails y referencias entre localidades y servicios. El comando de importación ejecuta esa validación antes de generar:
 
 ```text
 src/generated/template-data.ts
 ```
 
-## Qué hace el importador
-
-El script:
-
-- lee cada CSV de la carpeta de ejemplo
-- interpreta filas con formato `field,value`
-- interpreta tablas con columnas fijas
-- normaliza valores comunes como `true/false`, `números` y `strings`
-- genera un payload listo para usar como datos de la aplicación
-
-## Flujo recomendado
+## Flujo
 
 ```text
-Hoja / CSV
-  ↓
+Excel / Google Sheet / CSV
+          ↓
 examples/template-data/
-  ↓
+          ↓
+npm run validate:data
+          ↓
 npm run import:template
-  ↓
+          ↓
 src/generated/template-data.ts
-  ↓
-Astro build
+          ↓
+npm run build
 ```
 
-## Importante
+El repositorio usa CSV como formato de entrada porque es fácil de exportar desde Excel o Google Sheets. El código no lee el CSV en runtime: los datos se transforman durante el desarrollo o el build y el sitio sigue siendo estático.
 
-La lógica actual sirve como base para una plantilla reutilizable, pero todavía puede ampliarse con:
+## Formatos
 
-- validación de columnas requeridas
-- validación de entradas por schema
-- importación de horarios
-- importación de testimonios
-- importación de FAQs
-- soporte para archivos `.xlsx`
-- generación automática de páginas y contenido desde la hoja
+- Los archivos de configuración de una sola fila usan `field,value`.
+- Las tablas de entidades usan una columna por campo.
+- Los booleanos aceptan `true` o `false`.
+- Los slugs deben usar minúsculas, números y guiones, por ejemplo `blocked-drains`.
+- Los teléfonos internacionales deben usar formato E.164, por ejemplo `+61390418200`.
+- Las URLs deben empezar por `http://` o `https://`.
+- No uses datos falsos de reseñas en un proyecto real: los testimonios deben tener autorización.
 
-## Estructura general
+## Pendiente
 
-```text
-examples/template-data/
-  business.csv
-  contact.csv
-  services.csv
-  locations.csv
-
-scripts/
-  import-template.mjs
-
-src/generated/
-  template-data.ts
-```
-
-## Siguiente paso recomendado
-
-Extender el importer para generar:
-
-- `src/config/site.ts`
-- `src/data/business.ts`
-- `src/content/services/*.md`
-- `src/content/locations/*.md`
-- `src/data/testimonials.ts`
-
-Así la plantilla queda lista para reutilizarse sin hardcodear valores en componentes.
+La base actual valida y normaliza los datos tabulares, pero todavía puede ampliarse para generar automáticamente contenido Markdown de servicios y localidades, importar archivos `.xlsx` directamente y conectar con Google Sheets mediante API.

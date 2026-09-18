@@ -1,0 +1,8 @@
+day,open,close,label,enabled
+Monday,07:00,18:00,,true
+Tuesday,07:00,18:00,,true
+Wednesday,07:00,18:00,,true
+Thursday,07:00,18:00,,true
+Friday,07:00,18:00,,true
+Saturday,08:00,16:00,,true
+Sunday,,,Solo urgencias,true

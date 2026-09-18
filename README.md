@@ -1,21 +1,75 @@
 # Plantilla SEO para negocios locales con Astro
 
-Una plantilla reutilizable para negocios locales que necesitan un sitio rápido, estático y optimizado para SEO, con páginas de servicios, ubicaciones, blog, datos estructurados y una capa de entrada basada en hojas de cálculo.
-
-Este proyecto comenzó como una demo del flujo SEO para un fontanero ficticio en Melbourne, pero ha sido reestructurado para servir como base reutilizable para negocios reales.
+Una plantilla reutilizable para negocios locales que necesitan un sitio rápido, estático y optimizado para SEO, con páginas de servicios, localidades, blog, datos estructurados y una capa de entrada basada en hojas de cálculo.
 
 ## Características
 
-- Astro 5 + TypeScript + Tailwind CSS 4
-- Exportación estática para SEO y rendimiento
-- Capa de configuración reutilizable en `src/config/`
-- Flujo de entrada basado en CSV/hojas de cálculo bajo `examples/template-data/`
-- Script de importación para normalizar datos tabulares (`scripts/import-template.mjs`)
-- Estructura preparada para negocios locales con schema.org
-- Páginas de servicios, ubicaciones y blog
-- Feature flags para activar o desactivar secciones como blog, ubicaciones, precios, formulario de contacto y WhatsApp
+- Astro 5 + TypeScript + Tailwind CSS 4.
+- Exportación estática para SEO y rendimiento.
+- Configuración reutilizable en `src/config/`.
+- Entrada basada en CSV exportados desde Excel o Google Sheets.
+- Validación de datos con `npm run validate:data`.
+- Importación y generación de datos con `npm run import:template`.
+- Servicios, localidades, FAQs, testimonios, horarios y redes sociales como tablas de ejemplo.
+- Datos estructurados preparados para negocios locales.
+- Feature flags para activar o desactivar módulos.
 
-## Estructura del proyecto
+## Inicio rápido
+
+```bash
+npm install
+npm run validate:data
+npm run import:template
+npm run dev
+```
+
+Abre `http://localhost:4321` en el navegador.
+
+Para generar el sitio estático:
+
+```bash
+npm run build
+```
+
+La salida se crea en `dist/`.
+
+## Flujo de datos
+
+```text
+Excel / Google Sheets / CSV
+          ↓
+examples/template-data/
+          ↓
+npm run validate:data
+          ↓
+npm run import:template
+          ↓
+src/generated/template-data.ts
+          ↓
+Astro
+```
+
+El sitio no depende de leer hojas de cálculo en producción. Los datos se procesan antes de generar el sitio, por lo que el resultado sigue siendo estático.
+
+## Datos de ejemplo
+
+La carpeta `examples/template-data/` contiene:
+
+```text
+business.csv
+contact.csv
+hours.csv
+social.csv
+services.csv
+locations.csv
+location-services.csv
+faqs.csv
+testimonials.csv
+```
+
+Los datos son de demostración y están basados en el ejemplo de Plumbing Co. Sustitúyelos antes de publicar un proyecto real.
+
+## Estructura
 
 ```text
 src/
@@ -34,74 +88,35 @@ docs/
   template-data.md
 ```
 
-## Inicio rápido
+## Comandos
 
-```bash
-npm install
-npm run import:template
-npm run dev
-```
+| Comando | Función |
+|---|---|
+| `npm run dev` | Inicia el servidor de desarrollo |
+| `npm run check` | Ejecuta las comprobaciones de Astro |
+| `npm run validate:data` | Valida las tablas CSV sin generar archivos |
+| `npm run import:template` | Valida e importa los CSV |
+| `npm run build` | Genera el sitio estático |
+| `npm run preview` | Previsualiza la compilación |
 
-## Compilar
+## Crear un proyecto nuevo
 
-```bash
-npm run build
-```
-
-## Flujo con CSV / hoja de cálculo
-
-La plantilla admite un flujo sencillo tipo workbook:
-
-- rellenas tablas en archivos CSV dentro de `examples/template-data/`
-- ejecutas el importador para normalizar los datos
-- usas el payload generado como configuración base de la app
-
-Ejemplo:
-
-```bash
-npm run import:template
-```
-
-Eso lee los archivos CSV y genera una salida normalizada en:
-
-```text
-src/generated/template-data.ts
-```
-
-## Datos de ejemplo incluidos
-
-La carpeta `examples/template-data/` incluye ejemplos para:
-
-- negocio
-- contacto
-- servicios
-- ubicaciones
-
-Ejemplos incluidos:
-
-```text
-examples/template-data/business.csv
-examples/template-data/contact.csv
-examples/template-data/services.csv
-examples/template-data/locations.csv
-```
+1. Copia el repositorio.
+2. Sustituye los archivos de `examples/template-data/` por los datos del nuevo negocio.
+3. Revisa `src/config/site.ts` y las configuraciones de marca.
+4. Ejecuta `npm run validate:data`.
+5. Ejecuta `npm run import:template`.
+6. Ejecuta `npm run check` y `npm run build`.
+7. Revisa títulos, descripciones, enlaces, datos estructurados y contenido antes de publicar.
 
 ## Casos de uso
 
-La plantilla está pensada para negocios locales como:
+La plantilla puede adaptarse a fontaneros, electricistas, empresas de limpieza, cerrajeros, dentistas, clínicas, servicios del hogar y negocios de mantenimiento.
 
-- fontaneros
-- electricistas
-- limpieza
-- cerrajeros
-- dentistas
-- clínicas
-- servicios del hogar
-- negocios de mantenimiento
+La demo visual original de fontanería continúa dentro del proyecto como referencia, pero el flujo de datos está pensado para reutilizarse en otros sectores.
 
-La demo original de fontanería sigue sirviendo como referencia visual, pero la estructura ya está preparada para reutilizarse con otros negocios.
+## Documentación
 
-## Documentación relacionada
-
-- `docs/template-data.md` — flujo de CSV y hojas de cálculo
-- `CLAUDE.md` — reglas y convenciones del proyecto
+- `docs/template-data.md`: formato de las tablas y flujo de importación.
+- `CLAUDE.md`: reglas y convenciones del proyecto.
+- `src/references/`: referencias de voz y contenido del ejemplo original.
