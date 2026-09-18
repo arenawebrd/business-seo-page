@@ -1,0 +1,12 @@
+field,value
+business_name,Plumbing Co
+legal_name,Plumbing Co Pty Ltd
+site_url,https://plumbing-co.example.com
+tagline,"Honest plumbers. Same-day if we can."
+description,"Licensed plumbers serving Melbourne's inner south since 2009."
+industry,plumber
+schema_type,Plumber
+language,en
+locale,en-AU
+currency,AUD
+license_number,VIC-PL-48217

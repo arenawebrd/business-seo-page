@@ -1,13 +1,9 @@
 ---
 import Logo from './Logo.astro';
 import { business } from '../../data/business';
+import { siteNavigation } from '../../config/navigation';
 
-const nav = [
-  { label: 'Services', href: '/services/' },
-  { label: 'Locations', href: '/locations/' },
-  { label: 'Blog', href: '/blog/' },
-  { label: 'Contact', href: '/contact/' },
-];
+const nav = siteNavigation.filter((item) => item.enabled);
 ---
 
 <header class="sticky top-0 z-40 border-b border-ink/5 bg-paper/80 backdrop-blur">

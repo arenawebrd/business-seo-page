@@ -1,0 +1,9 @@
+field,value
+phone_display,(03) 9041 8200
+phone_e164,+61390418200
+email,hello@plumbingco.com.au
+whatsapp_enabled,true
+whatsapp_number,+61390418200
+whatsapp_message,"Hi Plumbing Co, I need help with a plumbing issue."
+contact_form_enabled,true
+contact_form_provider,mailto
