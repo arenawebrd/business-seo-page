@@ -1,87 +1,45 @@
-# Project specs — Plumbing Co SEO brief
+# Project specification — reusable local business Astro starter
 
-## Overview
+## Purpose
 
-This is a demo site showing the SEO workflow for a fictional plumbing business in Melbourne, Australia. Six versions demonstrate progressive SEO implementation.
+This repository is a reusable static Astro starter for local business websites. It also contains the original Plumbing Co SEO workflow demo, with routes `/v1` through `/v6`.
 
-## Business
+## Reusable layer
 
-- **Name:** Plumbing Co
-- **Location:** Melbourne, Victoria, Australia
-- **Service area:** Inner south Melbourne (Prahran, South Yarra, Windsor, St Kilda, Armadale, Toorak, Malvern, Caulfield, Elwood, Brighton)
-- **Phone:** (03) 9041 8200
-- **Email:** hello@plumbingco.com.au
-- **Established:** 2009
-- **License:** VIC-PL-48217
-- **Reviews:** 4.9 ★ (412 Google reviews)
+- Site configuration: `src/config/site.ts`
+- Navigation: `src/config/navigation.ts`
+- Feature flags: `src/config/features.ts`
+- CSV examples: `examples/template-data/`
+- Import and validation: `scripts/import-template.mjs`
+- Generated payload: `src/generated/template-data.ts`
+- Content collections: `src/content/blog/` and `src/content/services/`
+- Local business routes: services and locations
 
-## Site structure
+## Demo data
 
-- **Homepage:** / — Six-page demo + real site structure
-- **Services:** /services/ — Service listing
-- **Service detail:** /services/[slug]/ — Individual service pages
-- **Blog:** /blog/ — Blog listing
-- **Blog post:** /blog/[slug]/ — Individual blog posts
-- **Demo versions:** /v1/ through /v6/
+The default example describes fictional Plumbing Co data for Melbourne, Australia. It must be replaced before production use. The voice, stories, opinions, reviews, prices, domain, phone number, and legal details under the demo references are not universal template defaults.
 
-## Demo versions
+## Data tables
 
-| Version | Stage | Description |
-|---------|-------|-------------|
-| v1 | Scaffolded site | Homepage built from one-line prompt |
-| v2 | AI blog slop | Generic AI blog post |
-| v3 | Voice-injected | Same post with Marco's voice |
-| v4 | Landing page | City+service landing page |
-| v5 | On-page SEO | v3 + 80+ item checklist |
-| v6 | Technical SEO | v5 + sitemap, robots, OG images, favicon |
+The example input includes business, contact, hours, social, services, locations, location-services, FAQs, and testimonials tables. Run `npm run validate:data` before importing them.
 
-## Content types
+## Technical requirements
 
-1. **Homepage sections:** Hero, FeatureGrid, HowItWorks, Testimonials, ServiceAreas, FinalCta
-2. **Blog post:** Title, meta description, H1, H2s, paragraphs, lists, image, TL;DR, FAQs
-3. **Service page:** Title, meta, H1, hero section, service details, pricing, FAQs, testimonials
+- Astro 5
+- TypeScript
+- Tailwind CSS 4
+- Static output
+- Sitemap through `@astrojs/sitemap`
+- Robots file in `public/robots.txt`
+- JSON-LD components in `src/components/seo/`
 
-## Technical
+## Pre-release checklist
 
-- **Framework:** Astro 5
-- **Styling:** Tailwind CSS 4
-- **TypeScript:** Yes
-- **Output:** Static site
-- **Sitemap:** Auto-generated via @astrojs/sitemap
-- **Robots:** public/robots.txt
-- **Images:** Pexels API (optional, run fetch-pexels.mjs)
-
-## SEO checklist (applied in v5)
-
-Full checklist in on-page-seo.md. Key items:
-- Title tag with primary keyword
-- Meta description
-- H1 with keyword
-- H2s with related keywords
-- Internal linking
-- Image alt text
-- FAQ schema
-- Breadcrumb schema
-- Article schema
-- Fast loading
-- Mobile responsive
-
-## Voice style
-
-Marco's voice (from voice.md):
-- Direct, no fluff
-- Plain English, no jargon
-- Specific numbers, not vague
-- Active voice
-- Conversational but professional
-- Dad jokes sparingly (0-2 per page)
-- "You" and "we" — direct address
-- No superlatives ("best", "leading", "state-of-the-art")
-
-## References
-
-- `src/references/voice.md` — Writing style
-- `src/references/humour.md` — Joke guidelines
-- `src/references/stats.md` — Canonical business numbers
-- `src/references/stories.md` — Recurring anecdotes
-- `src/references/opinions.md` — Industry opinions
+- Replace the placeholder domain in `astro.config.mjs`, site configuration, and `public/robots.txt`.
+- Replace all fictional contact, legal, pricing, review, and business data.
+- Run `npm run validate:data`.
+- Run `npm run import:template`.
+- Run `npm run check`.
+- Run `npm run build`.
+- Check canonical URLs, sitemap, robots, Open Graph, JSON-LD, forms, links, and accessibility.
+- Confirm that every testimonial and review claim is authorized and factual.
