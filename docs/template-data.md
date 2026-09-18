@@ -1,11 +1,12 @@
 # Sheet-based data template
 
-This repository now includes a simple, CSV-driven data template that can be used as a foundation for future projects.
+This repository includes a simple CSV-driven data template that can be reused across projects.
 
-## Folder
+## Folder structure
 
-- `examples/template-data/*.csv` — starter sheets you can fill in for a new project
-- `scripts/import-template.mjs` — reads the CSV files and prints a structured JSON payload
+- `examples/template-data/*.csv` — the editable source tables
+- `scripts/import-template.mjs` — reads those tables and generates a normalized payload
+- `src/generated/template-data.ts` — generated normalized data for the app
 
 ## How to use
 
@@ -13,18 +14,28 @@ This repository now includes a simple, CSV-driven data template that can be used
 npm run import:template
 ```
 
-This is a lightweight example of a workbook-style input flow:
+This is intentionally workbook-friendly:
 
-- Business data
-- Contact data
-- Services
-- Locations
+- a table for business information
+- a table for contact details
+- a table for services
+- a table for locations
 
-The idea is that a client or editor fills the CSV rows, and a future importer converts them into `src/config` or `src/data` content.
+The pattern is designed to map well to a real spreadsheet or Excel workbook with multiple tabs.
+
+## What the importer does
+
+It reads every CSV in `examples/template-data`, parses the rows, normalizes a few common fields, and emits a single generated TypeScript payload in `src/generated/template-data.ts`.
+
+This is the bridge between:
+
+- spreadsheet-friendly input
+- type-safe app configuration
+- static Astro pages
 
 ## Recommended next step
 
-For a production-ready template, extend the importer to generate:
+Extend the importer to generate:
 
 - `src/config/site.ts`
 - `src/data/business.ts`
@@ -32,4 +43,4 @@ For a production-ready template, extend the importer to generate:
 - `src/content/locations/*.md`
 - `src/data/testimonials.ts`
 
-This keeps the project static, typed, and easy to customize without hardcoded values in components.
+That would make the template fully reusable for client projects without hardcoded values in components.
