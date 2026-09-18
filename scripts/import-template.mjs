@@ -57,15 +57,6 @@ function parseCsv(content) {
   });
 }
 
-function normalizeRecord(record, keyMap = {}) {
-  const normalized = {};
-  for (const [key, value] of Object.entries(record)) {
-    const targetKey = keyMap[key] ?? key;
-    normalized[targetKey] = value;
-  }
-  return normalized;
-}
-
 function toBoolean(value) {
   const normalized = String(value).trim().toLowerCase();
   if (['true', '1', 'yes', 'y'].includes(normalized)) return true;
@@ -89,69 +80,58 @@ async function main() {
     .sort();
 
   if (csvFiles.length === 0) {
-    throw new Error(`No CSV files found in ${inputDir}`);
+    throw new Error(`No se encontraron archivos CSV en ${inputDir}`);
   }
 
   const parsed = {};
   for (const fileName of csvFiles) {
     const filePath = path.join(inputDir, fileName);
     const content = await fs.readFile(filePath, 'utf8');
-    parsed[path.basename(fileName, '.csv')] = parseCsv(content);
+    const rows = parseCsv(content);
+
+    const normalized = rows.length > 0 && Object.keys(rows[0]).length >= 2 &&
+      ['field', 'value'].includes(Object.keys(rows[0])[0]?.toLowerCase?.() ?? '') &&
+      ['field', 'value'].includes(Object.keys(rows[0])[1]?.toLowerCase?.() ?? '')
+      ? Object.fromEntries(
+          rows.map((row) => [String(row.field ?? row.key ?? row.name ?? '').trim(), String(row.value ?? row.val ?? '').trim()])
+            .filter(([key]) => key)
+        )
+      : rows;
+
+    parsed[path.basename(fileName, '.csv')] = normalized;
   }
 
-  const businessRows = parsed.business ?? [];
-  const contactRows = parsed.contact ?? [];
-  const servicesRows = parsed.services ?? [];
-  const locationsRows = parsed.locations ?? [];
-
-  const businessRecord = normalizeRecord(businessRows[0] ?? {}, {
-    business_name: 'businessName',
-    legal_name: 'legalName',
-    site_url: 'siteUrl',
-    license_number: 'licenseNumber',
-    phone_display: 'phoneDisplay',
-    phone_e164: 'phoneE164',
-    whatsapp_number: 'whatsappNumber',
-    whatsapp_message: 'whatsappMessage',
-  });
-
-  const contactRecord = normalizeRecord(contactRows[0] ?? {}, {
-    phone_display: 'phoneDisplay',
-    phone_e164: 'phoneE164',
-    email: 'email',
-    whatsapp_enabled: 'whatsappEnabled',
-    whatsapp_number: 'whatsappNumber',
-    whatsapp_message: 'whatsappMessage',
-    contact_form_enabled: 'contactFormEnabled',
-    contact_form_provider: 'contactFormProvider',
-  });
+  const business = parsed.business ?? {};
+  const contact = parsed.contact ?? {};
+  const services = Array.isArray(parsed.services) ? parsed.services : [];
+  const locations = Array.isArray(parsed.locations) ? parsed.locations : [];
 
   const templateData = {
     site: {
-      businessName: businessRecord.businessName ?? 'Your business name',
-      legalName: businessRecord.legalName ?? 'Your business name Pty Ltd',
-      siteUrl: businessRecord.siteUrl ?? 'https://example.com',
-      locale: businessRecord.locale ?? 'en-AU',
-      language: businessRecord.language ?? 'en',
-      currency: businessRecord.currency ?? 'AUD',
-      tagline: businessRecord.tagline ?? 'Your tagline',
-      description: businessRecord.description ?? 'Your business description',
-      foundationYear: toNumber(businessRecord.founded ?? businessRecord.foundation_year ?? businessRecord.founded_year),
-      jobsCompleted: toNumber(businessRecord.jobs_completed ?? businessRecord.jobsCompleted),
-      licenseNumber: businessRecord.license_number ?? businessRecord.licenseNumber ?? '',
-      schemaType: businessRecord.schema_type ?? 'LocalBusiness',
+      businessName: business.business_name ?? business.businessName ?? 'Tu nombre de negocio',
+      legalName: business.legal_name ?? business.legalName ?? 'Tu negocio SL',
+      siteUrl: business.site_url ?? business.siteUrl ?? 'https://example.com',
+      locale: business.locale ?? 'en-AU',
+      language: business.language ?? 'en',
+      currency: business.currency ?? 'AUD',
+      tagline: business.tagline ?? 'Tu slogan',
+      description: business.description ?? 'Tu descripción',
+      foundationYear: toNumber(business.founded ?? business.foundation_year ?? business.founded_year ?? 2024),
+      jobsCompleted: toNumber(business.jobs_completed ?? business.jobsCompleted ?? 0),
+      licenseNumber: business.license_number ?? business.licenseNumber ?? '',
+      schemaType: business.schema_type ?? business.schemaType ?? 'LocalBusiness',
     },
     contact: {
-      phoneDisplay: contactRecord.phoneDisplay ?? businessRecord.phoneDisplay ?? '(00) 0000 0000',
-      phoneE164: contactRecord.phoneE164 ?? businessRecord.phoneE164 ?? '+61000000000',
-      email: contactRecord.email ?? businessRecord.email ?? 'hello@example.com',
-      whatsappEnabled: toBoolean(contactRecord.whatsappEnabled ?? true),
-      whatsappNumber: contactRecord.whatsappNumber ?? businessRecord.whatsappNumber ?? '+61000000000',
-      whatsappMessage: contactRecord.whatsappMessage ?? 'Hi, I need help.',
-      contactFormEnabled: toBoolean(contactRecord.contactFormEnabled ?? true),
-      contactFormProvider: contactRecord.contactFormProvider ?? 'mailto',
+      phoneDisplay: contact.phone_display ?? contact.phoneDisplay ?? '(00) 0000 0000',
+      phoneE164: contact.phone_e164 ?? contact.phoneE164 ?? '+61000000000',
+      email: contact.email ?? 'hello@example.com',
+      whatsappEnabled: toBoolean(contact.whatsapp_enabled ?? contact.whatsappEnabled ?? true),
+      whatsappNumber: contact.whatsapp_number ?? contact.whatsappNumber ?? '+61000000000',
+      whatsappMessage: contact.whatsapp_message ?? contact.whatsappMessage ?? 'Hola, necesito ayuda.',
+      contactFormEnabled: toBoolean(contact.contact_form_enabled ?? contact.contactFormEnabled ?? true),
+      contactFormProvider: contact.contact_form_provider ?? contact.contactFormProvider ?? 'mailto',
     },
-    services: servicesRows.map((service) => ({
+    services: services.map((service) => ({
       slug: service.slug,
       title: service.title,
       tagline: service.tagline,
@@ -159,7 +139,7 @@ async function main() {
       emergency: toBoolean(service.emergency),
       featured: toBoolean(service.featured),
     })),
-    locations: locationsRows.map((location) => ({
+    locations: locations.map((location) => ({
       slug: location.slug,
       name: location.name,
       tagline: location.tagline,
@@ -167,11 +147,16 @@ async function main() {
       distance: location.distance,
       indexable: toBoolean(location.indexable),
     })),
-    raw: parsed,
+    raw: {
+      business,
+      contact,
+      services,
+      locations,
+    },
   };
 
-  const output = `// This file is generated by scripts/import-template.mjs.
-// Do not edit manually.
+  const output = `// Este archivo se genera con scripts/import-template.mjs.
+// No lo edites manualmente.
 
 export const templateData = ${JSON.stringify(templateData, null, 2)} as const;
 
@@ -179,11 +164,11 @@ export type TemplateData = typeof templateData;
 `;
 
   await fs.writeFile(outputFile, output, 'utf8');
-  console.log(`Generated ${path.relative(process.cwd(), outputFile)}`);
+  console.log(`Archivo generado: ${path.relative(process.cwd(), outputFile)}`);
 }
 
 main().catch((error) => {
-  console.error('Unable to generate template data');
+  console.error('No se pudo generar el archivo de datos de la plantilla');
   console.error(error);
   process.exitCode = 1;
 });

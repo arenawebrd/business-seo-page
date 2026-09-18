@@ -1,21 +1,21 @@
-# Local business SEO starter for Astro
+# Plantilla SEO para negocios locales con Astro
 
-A reusable Astro starter for local service businesses that need a fast, static, SEO-friendly website with structured data, service pages, location pages, blog support, and a spreadsheet-friendly data layer.
+Una plantilla reutilizable para negocios locales que necesitan un sitio rápido, estático y optimizado para SEO, con páginas de servicios, ubicaciones, blog, datos estructurados y una capa de entrada basada en hojas de cálculo.
 
-This project originally started as a demo of the SEO workflow for a fictional Melbourne plumber, but it has been refactored into a more reusable template for real-world local businesses.
+Este proyecto comenzó como una demo del flujo SEO para un fontanero ficticio en Melbourne, pero ha sido reestructurado para servir como base reutilizable para negocios reales.
 
-## Highlights
+## Características
 
 - Astro 5 + TypeScript + Tailwind CSS 4
-- Static export with SSG for SEO and performance
-- Reusable configuration layer (`src/config`)
-- Spreadsheet-friendly CSV data input via `examples/template-data/`
-- Import script for normalizing tabular data to generated config (`scripts/import-template.mjs`)
-- Local business SEO structure with schema.org components
-- Service, location, and blog-ready content foundation
-- Feature flags for enabling/disabling sections like blog, locations, pricing, contact form, and WhatsApp
+- Exportación estática para SEO y rendimiento
+- Capa de configuración reutilizable en `src/config/`
+- Flujo de entrada basado en CSV/hojas de cálculo bajo `examples/template-data/`
+- Script de importación para normalizar datos tabulares (`scripts/import-template.mjs`)
+- Estructura preparada para negocios locales con schema.org
+- Páginas de servicios, ubicaciones y blog
+- Feature flags para activar o desactivar secciones como blog, ubicaciones, precios, formulario de contacto y WhatsApp
 
-## Project structure
+## Estructura del proyecto
 
 ```text
 src/
@@ -34,7 +34,7 @@ docs/
   template-data.md
 ```
 
-## Quick start
+## Inicio rápido
 
 ```bash
 npm install
@@ -42,48 +42,66 @@ npm run import:template
 npm run dev
 ```
 
-## Build
+## Compilar
 
 ```bash
 npm run build
 ```
 
-## CSV / sheet workflow
+## Flujo con CSV / hoja de cálculo
 
-This starter supports a simple workbook-style workflow:
+La plantilla admite un flujo sencillo tipo workbook:
 
-- fill tables in CSV files under `examples/template-data/`
-- run the importer to normalize the data
-- use the generated payload as the app's configuration layer
+- rellenas tablas en archivos CSV dentro de `examples/template-data/`
+- ejecutas el importador para normalizar los datos
+- usas el payload generado como configuración base de la app
 
-Example:
+Ejemplo:
 
 ```bash
 npm run import:template
 ```
 
-This reads the CSV files and generates a normalized payload in:
+Eso lee los archivos CSV y genera una salida normalizada en:
 
 ```text
 src/generated/template-data.ts
 ```
 
-## Notes
+## Datos de ejemplo incluidos
 
-The template is designed to be adapted for local businesses such as:
+La carpeta `examples/template-data/` incluye ejemplos para:
 
-- plumbers
-- electricians
-- cleaners
-- locksmiths
-- dentists
-- clinics
-- home services
-- maintenance businesses
+- negocio
+- contacto
+- servicios
+- ubicaciones
 
-This is intentionally a general starter, while the demo content still includes a plumbing example as a reference implementation.
+Ejemplos incluidos:
 
-## Related docs
+```text
+examples/template-data/business.csv
+examples/template-data/contact.csv
+examples/template-data/services.csv
+examples/template-data/locations.csv
+```
 
-- `docs/template-data.md` — CSV and spreadsheet workflow
-- `CLAUDE.md` — project-specific working rules and conventions
+## Casos de uso
+
+La plantilla está pensada para negocios locales como:
+
+- fontaneros
+- electricistas
+- limpieza
+- cerrajeros
+- dentistas
+- clínicas
+- servicios del hogar
+- negocios de mantenimiento
+
+La demo original de fontanería sigue sirviendo como referencia visual, pero la estructura ya está preparada para reutilizarse con otros negocios.
+
+## Documentación relacionada
+
+- `docs/template-data.md` — flujo de CSV y hojas de cálculo
+- `CLAUDE.md` — reglas y convenciones del proyecto

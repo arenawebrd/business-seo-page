@@ -1,41 +1,90 @@
-# Sheet-based data template
+# Plantilla basada en hojas de cálculo
 
-This repository includes a simple CSV-driven data template that can be reused across projects.
+Este repositorio incluye una base para trabajar con datos de negocio en formato tabular y convertirlos en una estructura reutilizable para un proyecto Astro.
 
-## Folder structure
+## Carpeta de ejemplo
 
-- `examples/template-data/*.csv` — the editable source tables
-- `scripts/import-template.mjs` — reads those tables and generates a normalized payload
-- `src/generated/template-data.ts` — generated normalized data for the app
+Los ejemplos de entrada viven en:
 
-## How to use
+```text
+examples/template-data/
+```
+
+Archivos incluidos:
+
+- `business.csv`
+- `contact.csv`
+- `services.csv`
+- `locations.csv`
+
+## Cómo usarlo
 
 ```bash
+npm install
 npm run import:template
 ```
 
-This is intentionally workbook-friendly:
+Ese comando lee los CSV y genera un archivo normalizado en:
 
-- a table for business information
-- a table for contact details
-- a table for services
-- a table for locations
+```text
+src/generated/template-data.ts
+```
 
-The pattern is designed to map well to a real spreadsheet or Excel workbook with multiple tabs.
+## Qué hace el importador
 
-## What the importer does
+El script:
 
-It reads every CSV in `examples/template-data`, parses the rows, normalizes a few common fields, and emits a single generated TypeScript payload in `src/generated/template-data.ts`.
+- lee cada CSV de la carpeta de ejemplo
+- interpreta filas con formato `field,value`
+- interpreta tablas con columnas fijas
+- normaliza valores comunes como `true/false`, `números` y `strings`
+- genera un payload listo para usar como datos de la aplicación
 
-This is the bridge between:
+## Flujo recomendado
 
-- spreadsheet-friendly input
-- type-safe app configuration
-- static Astro pages
+```text
+Hoja / CSV
+  ↓
+examples/template-data/
+  ↓
+npm run import:template
+  ↓
+src/generated/template-data.ts
+  ↓
+Astro build
+```
 
-## Recommended next step
+## Importante
 
-Extend the importer to generate:
+La lógica actual sirve como base para una plantilla reutilizable, pero todavía puede ampliarse con:
+
+- validación de columnas requeridas
+- validación de entradas por schema
+- importación de horarios
+- importación de testimonios
+- importación de FAQs
+- soporte para archivos `.xlsx`
+- generación automática de páginas y contenido desde la hoja
+
+## Estructura general
+
+```text
+examples/template-data/
+  business.csv
+  contact.csv
+  services.csv
+  locations.csv
+
+scripts/
+  import-template.mjs
+
+src/generated/
+  template-data.ts
+```
+
+## Siguiente paso recomendado
+
+Extender el importer para generar:
 
 - `src/config/site.ts`
 - `src/data/business.ts`
@@ -43,4 +92,4 @@ Extend the importer to generate:
 - `src/content/locations/*.md`
 - `src/data/testimonials.ts`
 
-That would make the template fully reusable for client projects without hardcoded values in components.
+Así la plantilla queda lista para reutilizarse sin hardcodear valores en componentes.
